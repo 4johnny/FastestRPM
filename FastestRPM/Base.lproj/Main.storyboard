@@ -19,11 +19,20 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RPM_dial" translatesAutoresizingMaskIntoConstraints="NO" id="1LY-qI-dv8">
                                 <rect key="frame" x="150" y="150" width="300" height="300"/>
                             </imageView>
+                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RPM_needle" translatesAutoresizingMaskIntoConstraints="NO" id="VYb-R1-gKe">
+                                <rect key="frame" x="241" y="200" width="118" height="199"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="199" id="CbX-FF-rkD"/>
+                                    <constraint firstAttribute="width" constant="118" id="f4G-Gg-psm"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="1LY-qI-dv8" secondAttribute="centerX" id="Kqk-gj-jRZ"/>
+                            <constraint firstAttribute="centerY" secondItem="VYb-R1-gKe" secondAttribute="centerY" id="YAK-D2-Jvr"/>
                             <constraint firstAttribute="centerY" secondItem="1LY-qI-dv8" secondAttribute="centerY" id="dDc-Vk-9mV"/>
+                            <constraint firstAttribute="centerX" secondItem="VYb-R1-gKe" secondAttribute="centerX" id="hyq-8a-uFl"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -33,5 +42,6 @@
     </scenes>
     <resources>
         <image name="RPM_dial" width="300" height="300"/>
+        <image name="RPM_needle" width="185" height="313"/>
     </resources>
 </document>
