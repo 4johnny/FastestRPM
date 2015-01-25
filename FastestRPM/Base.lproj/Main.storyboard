@@ -28,18 +28,28 @@
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="1LY-qI-dv8" secondAttribute="centerX" id="Kqk-gj-jRZ"/>
                             <constraint firstAttribute="centerY" secondItem="VYb-R1-gKe" secondAttribute="centerY" id="YAK-D2-Jvr"/>
                             <constraint firstAttribute="centerY" secondItem="1LY-qI-dv8" secondAttribute="centerY" id="dDc-Vk-9mV"/>
                             <constraint firstAttribute="centerX" secondItem="VYb-R1-gKe" secondAttribute="centerX" id="hyq-8a-uFl"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="PYz-IV-mW5" appends="YES" id="DYN-ra-b3e"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="needleView" destination="VYb-R1-gKe" id="zh2-il-20l"/>
+                        <outlet property="panGesture" destination="PYz-IV-mW5" id="g7J-Zw-u0q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="PYz-IV-mW5">
+                    <connections>
+                        <action selector="panGestureAction:" destination="BYZ-38-t0r" id="Hco-DO-eud"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
         </scene>
     </scenes>

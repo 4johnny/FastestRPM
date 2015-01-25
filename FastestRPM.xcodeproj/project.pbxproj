@@ -27,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B26D742F1A74F62B00F79CA6 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		B295E1851A74D7A5008DEAE3 /* FastestRPM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FastestRPM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B295E1891A74D7A5008DEAE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B295E18A1A74D7A5008DEAE3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -84,8 +85,6 @@
 				B295E18F1A74D7A5008DEAE3 /* ViewController.h */,
 				B295E1901A74D7A5008DEAE3 /* ViewController.m */,
 				B295E1921A74D7A5008DEAE3 /* Main.storyboard */,
-				B295E1951A74D7A5008DEAE3 /* Images.xcassets */,
-				B295E1971A74D7A5008DEAE3 /* LaunchScreen.xib */,
 				B295E1881A74D7A5008DEAE3 /* Supporting Files */,
 			);
 			path = FastestRPM;
@@ -94,10 +93,13 @@
 		B295E1881A74D7A5008DEAE3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B295E1971A74D7A5008DEAE3 /* LaunchScreen.xib */,
+				B295E1951A74D7A5008DEAE3 /* Images.xcassets */,
 				B295E18C1A74D7A5008DEAE3 /* AppDelegate.h */,
 				B295E18D1A74D7A5008DEAE3 /* AppDelegate.m */,
 				B295E1891A74D7A5008DEAE3 /* Info.plist */,
 				B295E18A1A74D7A5008DEAE3 /* main.m */,
+				B26D742F1A74F62B00F79CA6 /* PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -286,6 +288,8 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FastestRPM/PrefixHeader.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -327,6 +331,8 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FastestRPM/PrefixHeader.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -345,6 +351,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = FastestRPM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -355,6 +362,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = FastestRPM/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

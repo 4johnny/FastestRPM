@@ -18,6 +18,7 @@
 # pragma mark Properties
 
 @property (weak, nonatomic) IBOutlet UIImageView *needleView;
+@property (strong, nonatomic) IBOutlet UIPanGestureRecognizer *panGesture;
 
 @end
 
