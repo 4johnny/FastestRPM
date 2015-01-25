@@ -8,8 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+
+#
+# pragma mark - Interface
+#
+
 @interface ViewController : UIViewController
 
+# pragma mark Properties
+
+@property (weak, nonatomic) IBOutlet UIImageView *needleView;
 
 @end
 

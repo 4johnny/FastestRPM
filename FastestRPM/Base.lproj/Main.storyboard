@@ -19,7 +19,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RPM_dial" translatesAutoresizingMaskIntoConstraints="NO" id="1LY-qI-dv8">
                                 <rect key="frame" x="150" y="150" width="300" height="300"/>
                             </imageView>
-                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RPM_needle" translatesAutoresizingMaskIntoConstraints="NO" id="VYb-R1-gKe">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RPM_needle" translatesAutoresizingMaskIntoConstraints="NO" id="VYb-R1-gKe">
                                 <rect key="frame" x="241" y="200" width="118" height="199"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="199" id="CbX-FF-rkD"/>
@@ -35,6 +35,9 @@
                             <constraint firstAttribute="centerX" secondItem="VYb-R1-gKe" secondAttribute="centerX" id="hyq-8a-uFl"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="needleView" destination="VYb-R1-gKe" id="zh2-il-20l"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
