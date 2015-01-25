@@ -66,16 +66,16 @@
 
 - (IBAction)panGestureAction:(UIPanGestureRecognizer *)sender {
 	
-	CGPoint velocity = [sender velocityInView:self.view];
-	
 	switch (self.panGesture.state) {
 			
 		case UIGestureRecognizerStateChanged:
-			[self moveNeedleWithVelocity:velocity];
+			[self moveNeedleWithVelocity:[sender velocityInView:self.view]];
 			break;
 			
 		case UIGestureRecognizerStateEnded:
-			[self moveNeedleWithVelocity:velocity];
+		case UIGestureRecognizerStateCancelled:
+		case UIGestureRecognizerStateFailed:
+			self.needleView.transform = self.minRotationTransform;
 			break;
 			
 		case UIGestureRecognizerStateBegan:
