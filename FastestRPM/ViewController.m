@@ -19,6 +19,8 @@
 
 #define LIMIT_VELOCITY	5000.0 // Points per second
 
+#define TIMER_DELAY		0.1 // Seconds
+
 
 #
 # pragma mark - Macros
@@ -57,7 +59,7 @@
 	
 	// Initialize needle view to point to minimum mark on dial
 	_minRotationTransform = CGAffineTransformMakeRotation(RADIANS(MIN_DEGREES));
-	self.needleView.transform = self.minRotationTransform;
+	[self moveNeedleToMin];
 }
 
 
@@ -70,12 +72,17 @@
 			
 		case UIGestureRecognizerStateChanged:
 			[self moveNeedleWithVelocity:[sender velocityInView:self.view]];
+			[NSTimer scheduledTimerWithTimeInterval:TIMER_DELAY
+											 target:self
+										   selector:@selector(resetToMinTimer:)
+										   userInfo:nil
+											repeats:NO];
 			break;
 			
 		case UIGestureRecognizerStateEnded:
 		case UIGestureRecognizerStateCancelled:
 		case UIGestureRecognizerStateFailed:
-			self.needleView.transform = self.minRotationTransform;
+			[self moveNeedleToMin];
 			break;
 			
 		case UIGestureRecognizerStateBegan:
@@ -90,6 +97,19 @@
 
 
 # pragma mark Helpers
+
+
+- (void)resetToMinTimer:(NSTimer*)timer {
+	
+	[self moveNeedleToMin];
+	MDLog(@"Timer reset");
+}
+
+
+- (void)moveNeedleToMin {
+	
+	self.needleView.transform = self.minRotationTransform;
+}
 
 
 - (void)moveNeedleWithVelocity:(CGPoint)velocity {
@@ -108,6 +128,7 @@
 	self.needleView.transform = CGAffineTransformRotate(self.minRotationTransform, RADIANS(degrees));
 
 	MDLog(@"Velocity: x:%.2f, y:%.2f, curr:%.2f, max:%.2f", velocity.x, velocity.y, combinedVelocity, self.maxVelocity);
+	MDLog(@"Degrees: %.2f", degrees);
 }
 
 
