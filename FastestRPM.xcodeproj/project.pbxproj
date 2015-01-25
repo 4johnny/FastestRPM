@@ -81,8 +81,6 @@
 		B295E1871A74D7A5008DEAE3 /* FastestRPM */ = {
 			isa = PBXGroup;
 			children = (
-				B295E18C1A74D7A5008DEAE3 /* AppDelegate.h */,
-				B295E18D1A74D7A5008DEAE3 /* AppDelegate.m */,
 				B295E18F1A74D7A5008DEAE3 /* ViewController.h */,
 				B295E1901A74D7A5008DEAE3 /* ViewController.m */,
 				B295E1921A74D7A5008DEAE3 /* Main.storyboard */,
@@ -96,6 +94,8 @@
 		B295E1881A74D7A5008DEAE3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B295E18C1A74D7A5008DEAE3 /* AppDelegate.h */,
+				B295E18D1A74D7A5008DEAE3 /* AppDelegate.m */,
 				B295E1891A74D7A5008DEAE3 /* Info.plist */,
 				B295E18A1A74D7A5008DEAE3 /* main.m */,
 			);
@@ -414,6 +414,7 @@
 				B295E1AA1A74D7A5008DEAE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B295E1AB1A74D7A5008DEAE3 /* Build configuration list for PBXNativeTarget "FastestRPMTests" */ = {
 			isa = XCConfigurationList;
@@ -422,6 +423,7 @@
 				B295E1AD1A74D7A5008DEAE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
