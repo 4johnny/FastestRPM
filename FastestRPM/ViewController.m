@@ -17,8 +17,7 @@
 #define MAX_DEGREES		135.0
 #define RANGE_DEGREES	(MAX_DEGREES - MIN_DEGREES)
 
-#define MIN_SPEED	0.0		// Points per second
-#define MAX_SPEED	100.0	// Points per second
+#define LIMIT_VELOCITY	5000.0 // Points per second
 
 
 #
@@ -37,7 +36,7 @@
 # pragma mark Properties
 
 @property (nonatomic, readonly) CGAffineTransform minRotationTransform;
-@property (nonatomic) CGPoint prevTranslation;
+@property (nonatomic) CGFloat maxVelocity;
 
 @end
 
@@ -67,27 +66,24 @@
 
 - (IBAction)panGestureAction:(UIPanGestureRecognizer *)sender {
 	
-	CGPoint translation = [sender translationInView:self.view];
+	CGPoint velocity = [sender velocityInView:self.view];
 	
 	switch (self.panGesture.state) {
 			
 		case UIGestureRecognizerStateChanged:
-			MDLog(@"Translation Changed: (x:%.2f,y:%.2f)", translation.x, translation.y);
-			[self moveNeedleWithTranslation:&translation];
+			[self moveNeedleWithVelocity:velocity];
 			break;
 			
 		case UIGestureRecognizerStateEnded:
-			MDLog(@"Translation Ended: (x:%.2f,y:%.2f)", translation.x, translation.y);
-			[self moveNeedleWithTranslation:&translation];
+			[self moveNeedleWithVelocity:velocity];
 			break;
 			
 		case UIGestureRecognizerStateBegan:
-			MDLog(@"Translation Began: (x:%.2f,y:%.2f)", translation.x, translation.y);
-			self.prevTranslation = translation;
+			// Expected.  Do nothing.
 			break;
 			
 		default:
-			MDLog(@"Translation Unexpected: (x:%.2f,y:%.2f)", translation.x, translation.y);
+			MDLog(@"Unexpected state: %d", (int)self.panGesture.state);
 			break;
 	}
 }
@@ -96,16 +92,22 @@
 # pragma mark Helpers
 
 
-- (void)moveNeedleWithTranslation:(CGPoint*)translation {
-	
-	MDLog(@"Translation Distance: %.2f", [self distancePannedWithPoint:translation andPoint:&_prevTranslation]);
-}
+- (void)moveNeedleWithVelocity:(CGPoint)velocity {
 
-
-- (CGFloat)distancePannedWithPoint:(CGPoint*)point1 andPoint:(CGPoint*)point2 {
+	// Calculate velocity of pan motion
+	CGFloat combinedVelocity = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2));
+	self.maxVelocity = MAX(self.maxVelocity, combinedVelocity);
 	
-	// Pythagorean
-	return sqrt(pow(point2->x - point1->x, 2) + pow(point2->y - point1->y, 2));
+	// Calculate percentage of current velocity to velocity limit
+	CGFloat velocityPercentage = combinedVelocity / LIMIT_VELOCITY;
+	
+	// Calculate proportion of RPM needle degree range
+	CGFloat degrees = (MAX_DEGREES - MIN_DEGREES) * velocityPercentage;
+	
+	// Move needle in degree range proportionate to velocity
+	self.needleView.transform = CGAffineTransformRotate(self.minRotationTransform, RADIANS(degrees));
+
+	MDLog(@"Velocity: x:%.2f, y:%.2f, curr:%.2f, max:%.2f", velocity.x, velocity.y, combinedVelocity, self.maxVelocity);
 }
 
 
