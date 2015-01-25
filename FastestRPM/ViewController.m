@@ -72,22 +72,22 @@
 	switch (self.panGesture.state) {
 			
 		case UIGestureRecognizerStateChanged:
-			MDLog(@"Translation Changed: (x:%f,y:%f)", translation.x, translation.y);
+			MDLog(@"Translation Changed: (x:%.2f,y:%.2f)", translation.x, translation.y);
 			[self moveNeedleWithTranslation:&translation];
 			break;
-
+			
 		case UIGestureRecognizerStateEnded:
-			MDLog(@"Translation Ended: (x:%f,y:%f)", translation.x, translation.y);
+			MDLog(@"Translation Ended: (x:%.2f,y:%.2f)", translation.x, translation.y);
 			[self moveNeedleWithTranslation:&translation];
 			break;
-
+			
 		case UIGestureRecognizerStateBegan:
-			MDLog(@"Translation Began: (x:%f,y:%f)", translation.x, translation.y);
+			MDLog(@"Translation Began: (x:%.2f,y:%.2f)", translation.x, translation.y);
 			self.prevTranslation = translation;
 			break;
 			
 		default:
-			MDLog(@"Translation Unexpected: (x:%f,y:%f)", translation.x, translation.y);
+			MDLog(@"Translation Unexpected: (x:%.2f,y:%.2f)", translation.x, translation.y);
 			break;
 	}
 }
@@ -96,8 +96,16 @@
 # pragma mark Helpers
 
 
-- (void)moveNeedleWithTranslation:(CGPoint*) translation {
+- (void)moveNeedleWithTranslation:(CGPoint*)translation {
 	
+	MDLog(@"Translation Distance: %.2f", [self distancePannedWithPoint:translation andPoint:&_prevTranslation]);
+}
+
+
+- (CGFloat)distancePannedWithPoint:(CGPoint*)point1 andPoint:(CGPoint*)point2 {
+	
+	// Pythagorean
+	return sqrt(pow(point2->x - point1->x, 2) + pow(point2->y - point1->y, 2));
 }
 
 
