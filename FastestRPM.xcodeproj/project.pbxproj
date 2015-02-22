@@ -93,8 +93,8 @@
 		B295E1881A74D7A5008DEAE3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B295E1971A74D7A5008DEAE3 /* LaunchScreen.xib */,
 				B295E1951A74D7A5008DEAE3 /* Images.xcassets */,
+				B295E1971A74D7A5008DEAE3 /* LaunchScreen.xib */,
 				B295E18C1A74D7A5008DEAE3 /* AppDelegate.h */,
 				B295E18D1A74D7A5008DEAE3 /* AppDelegate.m */,
 				B295E1891A74D7A5008DEAE3 /* Info.plist */,

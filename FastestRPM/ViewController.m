@@ -17,9 +17,11 @@
 #define MAX_DEGREES		135.0
 #define RANGE_DEGREES	(MAX_DEGREES - MIN_DEGREES)
 
-#define LIMIT_VELOCITY	5000.0 // Points per second
+#define LIMIT_VELOCITY			7500.0 // Points per second
+#define LIMIT_VELOCITY_DELTA	10.0 // Points per second
 
-#define TIMER_DELAY		0.1 // Seconds
+#define RESET_DELAY		0.1 // Seconds
+#define VELOCITY_DELAY	0.1 // Seconds
 
 
 #
@@ -39,6 +41,9 @@
 
 @property (nonatomic, readonly) CGAffineTransform minRotationTransform;
 @property (nonatomic) CGFloat maxVelocity;
+@property (nonatomic) CGFloat currVelocity;
+@property (nonatomic) NSTimer* resetTimer;
+@property (nonatomic) NSTimer* velocityTimer;
 
 @end
 
@@ -60,6 +65,10 @@
 	// Initialize needle view to point to minimum mark on dial
 	_minRotationTransform = CGAffineTransformMakeRotation(RADIANS(MIN_DEGREES));
 	[self moveNeedleToMin];
+	
+	self.currVelocity = 0;
+	self.resetTimer = nil;
+	self.velocityTimer = nil;
 }
 
 
@@ -70,27 +79,73 @@
 	
 	switch (self.panGesture.state) {
 			
-		case UIGestureRecognizerStateChanged:
-			[self moveNeedleWithVelocity:[sender velocityInView:self.view]];
-			[NSTimer scheduledTimerWithTimeInterval:TIMER_DELAY
-											 target:self
-										   selector:@selector(resetToMinTimer:)
-										   userInfo:nil
-											repeats:NO];
+		case UIGestureRecognizerStateChanged: {
+			
+			// Get velocity from dimension components
+			CGPoint componentVelocity = [sender velocityInView:self.view];
+			CGFloat velocity = sqrt(pow(componentVelocity.x, 2) + pow(componentVelocity.y, 2));
+			
+			// Ignore velocity changes that are too small
+			CGFloat velocityDelta = abs(velocity - self.currVelocity);
+			if (velocityDelta < LIMIT_VELOCITY_DELTA) {
+				//MDLog(@"Ignoring velocity delta: %.2f", velocityDelta);
+				break;
+			}
+			
+			// Since we have gestures, invalidate any timers
+			if (self.resetTimer) {
+				[self.resetTimer invalidate];
+				self.resetTimer = nil;
+				// MDLog(@"Invalidating reset timer");
+			}
+			if (self.velocityTimer) {
+				[self.velocityTimer invalidate];
+				self.velocityTimer = nil;
+				// MDLog(@"Invalidating velocity timer");
+			}
+			
+			// If velocity increased, render immediately; o/w render on delay
+			if (velocity > self.currVelocity) {
+			
+				MDLog(@"Rendering velocity immediately");
+				
+				[self moveNeedleWithVelocity:velocity];
+				
+			} else {
+			
+				MDLog(@"Scheduling velocity timer");
+				
+				self.velocityTimer =
+				[NSTimer scheduledTimerWithTimeInterval:VELOCITY_DELAY
+												 target:self
+											   selector:@selector(moveNeedleWithTimer:)
+											   userInfo:[NSNumber numberWithFloat:velocity]
+												repeats:NO];
+			}
 			break;
+		}
 			
 		case UIGestureRecognizerStateEnded:
 		case UIGestureRecognizerStateCancelled:
 		case UIGestureRecognizerStateFailed:
-			[self moveNeedleToMin];
+			
+			if (!self.resetTimer) {
+				self.resetTimer =
+				[NSTimer scheduledTimerWithTimeInterval:RESET_DELAY
+												 target:self
+											   selector:@selector(resetToMinWithTimer:)
+											   userInfo:nil
+												repeats:NO];
+				MDLog(@"Scheduling reset timer");
+			}
 			break;
 			
 		case UIGestureRecognizerStateBegan:
-			// Expected.  Do nothing.
+			// Expected - do nothing
 			break;
 			
 		default:
-			MDLog(@"Unexpected state: %d", (int)self.panGesture.state);
+			MDLog(@"Unexpected pan gesture state: %d", (int)self.panGesture.state);
 			break;
 	}
 }
@@ -99,36 +154,53 @@
 # pragma mark Helpers
 
 
-- (void)resetToMinTimer:(NSTimer*)timer {
+- (void)resetToMinWithTimer:(NSTimer*)timer {
 	
+	self.resetTimer = nil;
+
 	[self moveNeedleToMin];
-	MDLog(@"Timer reset");
+	
+	MDLog(@"Timer triggers needle reset");
 }
 
 
 - (void)moveNeedleToMin {
 	
+	self.currVelocity = 0;
+
 	self.needleView.transform = self.minRotationTransform;
 }
 
 
-- (void)moveNeedleWithVelocity:(CGPoint)velocity {
+- (void)moveNeedleWithTimer:(NSTimer*)timer {
 
-	// Calculate velocity of pan motion
-	CGFloat combinedVelocity = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2));
-	self.maxVelocity = MAX(self.maxVelocity, combinedVelocity);
+	self.velocityTimer = nil;
+
+	CGFloat velocity = ((NSNumber*)timer.userInfo).floatValue;
+	[self moveNeedleWithVelocity:velocity];
 	
-	// Calculate percentage of current velocity to velocity limit
-	CGFloat velocityPercentage = combinedVelocity / LIMIT_VELOCITY;
+	MDLog(@"Timer triggers needle move");
+}
+
+
+- (void)moveNeedleWithVelocity:(CGFloat)velocity {
+
+	self.currVelocity = velocity;
+	
+	// Calculate velocity of pan motion
+	self.maxVelocity = MAX(self.maxVelocity, velocity);
+	MDLog(@"Velocity: curr:%.2f, max:%.2f", velocity, self.maxVelocity);
+	
+	// Calculate proportion of current velocity to velocity limit
+	CGFloat velocityProportion = velocity / LIMIT_VELOCITY;
+	//	MDLog(@"Velocity proportion: %.2f", velocityProportion);
 	
 	// Calculate proportion of RPM needle degree range
-	CGFloat degrees = (MAX_DEGREES - MIN_DEGREES) * velocityPercentage;
+	CGFloat degrees = MIN(RANGE_DEGREES * velocityProportion, RANGE_DEGREES);
+	//	MDLog(@"Degrees: %.2f", degrees);
 	
 	// Move needle in degree range proportionate to velocity
 	self.needleView.transform = CGAffineTransformRotate(self.minRotationTransform, RADIANS(degrees));
-
-	MDLog(@"Velocity: x:%.2f, y:%.2f, curr:%.2f, max:%.2f", velocity.x, velocity.y, combinedVelocity, self.maxVelocity);
-	MDLog(@"Degrees: %.2f", degrees);
 }
 
 
